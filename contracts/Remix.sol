@@ -37,8 +37,7 @@ contract Owner {
 
 
 contract TrackFactory {
-  // hash => address
-  mapping (string => address) trackHashes;
+  string[256] public trackHashes;
   address[256] public tracks;
   uint public trackCount = 0;
 
@@ -50,24 +49,11 @@ contract TrackFactory {
     uint ownershipPrice,
     uint rentPrice
   ) {
-    address trackAddress = new Track(trackCount, msg.sender, hash, name, authorName, ownershipPrice, rentPrice);
+    address trackAddress = new Track(msg.sender, hash, name, authorName, ownershipPrice, rentPrice);
 
-    trackHashes[hash] = trackAddress;
+    trackHashes[trackCount] = hash;
     tracks[trackCount] = trackAddress;
     trackCount += 1;
-  }
-
-  function checkTrackExist(string hash) returns (bool) {
-    if (trackHashes[hash] == 0x0) {
-      return false;
-    }
-    return true;
-  }
-
-  function getTrackByHash(string hash) returns (uint index) {
-    Track track = Track(trackHashes[hash]);
-
-    return track.getIndex();
   }
 }
 
@@ -75,7 +61,6 @@ contract Track is Owner {
 
   address public owner;
 
-  uint index;
   string public hash;
   bytes32 public name;
   string public authorName;
@@ -86,7 +71,6 @@ contract Track is Owner {
   mapping(address => uint) renters;
 
   function Track(
-    uint _index,
     address _owner,
     string _hash,
     bytes32 _name,
@@ -94,7 +78,6 @@ contract Track is Owner {
     uint _ownershipPrice,
     uint _rentPrice
   ) payable {
-    index = _index;
     owner = _owner;
     hash = _hash;
     name = _name;
@@ -107,10 +90,6 @@ contract Track is Owner {
 
   function getName() returns (bytes32) {
     return name;
-  }
-
-  function getIndex() returns (uint) {
-    return index;
   }
 
   function buy() payable returns (bool ok) {
