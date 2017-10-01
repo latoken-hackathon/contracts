@@ -143,4 +143,13 @@ contract Track is Owner {
   function changeRentPrice(uint price) isOwner isOwner {
     rentPrice = price;
   }
+  
+  function setField(int field, bytes value, uint requestId) 
+    paybable onlySource returns (bool ok)
+  {
+    // call buy or rent
+    // with changing owner or pay for rent.
+    
+    return true;
+  }
 }
