@@ -9,6 +9,6 @@ contract IInformation {
 }
 
 contract IIdentity {
-	// autho desc
+    // author
 }
 
