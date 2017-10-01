@@ -23,14 +23,11 @@ contract TrackFactory {
 contract Track is IInformation {
     
     string public hash;
-    string name;
+    string public name;
     Author author;
-    Price[] prices;
+    uint exludePrice;
+    uint rentPrice;
     
-    struct Price {
-        uint exludePrice;
-        uint rentPrice;
-    }
     
     function Track(string _hash, string _name, Author _author) {
         hash = _hash;
@@ -44,8 +41,12 @@ contract Track is IInformation {
         // ??? LAP
     }
     
-    function pay() payable {
-        // use setField?    
+    function buy() payable {
+        // 
+    }
+    
+    function rent() payable {
+        // rent 
     }
 }
 
@@ -56,7 +57,6 @@ contract Author is IIdentity {
     mapping(string => Track) tracks;
 
 
-    
     function Author(address _owner, string _name, string _desc) {
         owner = _owner;
         name = _name;
@@ -79,5 +79,31 @@ contract Author is IIdentity {
 }
 
 contract Renter is IIdentity {
+    address owner;
     
+    string name;
+    string desc;
+    
+    
+    struct RentItem {
+        uint startRent;
+        uint rentPeriod;
+        Track track;
+        
+        // function RentItem(uint _startRent, uint _period, Track track) {
+        //     startRent = _startRent;
+        //     rentPeriod = _period;
+        //     track = _track;
+        // }
+    }
+    
+    mapping(string => RentItem) items;
+    
+    function rent(string _hash, uint _rentPeriod, Track _track) {
+        items[_hash] = RentItem({
+                startRent: now, 
+                rentPeriod: _rentPeriod, 
+                track: _track
+            });
+    }
 }
